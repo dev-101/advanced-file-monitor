@@ -1,0 +1,134 @@
+4.4
+System Path :: Base Scan Path change detection & error flash message warning (e.g. when renaming root Osclass directory or tranferring installation to another domain)
+index.php | Change debug hook priority to lowest level (10)
+
+4.3
+replace osc_contact_email() with admin loop [send email alerts to all admins]
+
+4.2
+index.php | empty email report failsafe mechanism
+
+4.1
+index.php | remove $sOptions array completely + define separate osc_set_preference() settings inside database
+index.php | fix AND logic (incomplete next-neighbour empty input field state check added)
+index.php | INCLUDED EXTENSIONS > EXCLUDED EXTENSIONS | replace preg_match() with stripos() [+ performance + security]
+index.php | RESTORE directory scan (SELF_FIRST) [- performance + security]
+admin_settings.php | update form code + html description
+
+4.0
+index.php | remove excludeDir directory array + define separate osc_set_preference() settings inside database
+index.php | rewrite iterator function to reflect dir changes - now working properly with no foreach() loop any more subdirs are excluded as well as the defined root ex dirs
+index.php | warning-sign.png image update & filename rename
+admin_settings.php | admin re-style + update form code
+
+	REMAINING ISSUES
+	* removing dir scan lowers empty dir creation security
+	* issue with INCLUDE EXTENSIONS list lowers security for non-extension and unknown extension files
+	* SKIP DIRECTORIES form @ admin settings page must be filled in linear order (complex AND logic)
+
+3.0
+index.php | remove directory scan | issues with exclude directory array
+index.php | fix excludeDir path array | Why I reverted back to file-only mode & removed directory scan? Because of present issues with multiple directories inside array + subdirectories of defined dirs were still scanned. Additionally, file extensions do not properly work on scans with directories ON (empty extensions -> could isDir solve this problem?)
+index.php | include Extensions
+admin_settings.php | admin re-style
+admin_view_changes | unify file rename
+
+	REMAINING ISSUES
+	* multiple exclusion directory array | iterator does not exclude subdirs as well (oc-uploads is obvious problem here)
+
+2.4d
+index.php | icons: warning sign + new window
+index.php | removed button class @ warning flash message
+index.php | Email Template intro line
+index.php | Credits
+
+2.3c
+index.php | scan function mod | in_array() replaced with foreach() loop + stripos() function | excluded directories now function properly
+index.php + admin_settings.php | rename variable $skip -> $exludeDir
+index.php | PHP version warning stranslation string
+index.php | require PHP 5.3.8 version or newer
+
+2.3b
+index.php | iterator class mod | now detecting directory changes (add new/delete)
+index.php | PHP compatibility function removed + removed custom extensions support (required for directory scan support)
+index.php | @hash_file() in localhost XAMPP environment | suppress permission denied warning
+view_changes.php | line 8 @$diffB['files'] | suppress undefined index notice
+
+2.3
+index.php | PHP set_time_limit(0) | extend/over-ride MAXIMUM EXECTUION TIME
+index.php | Email Template | removed Website URL inside message body | use 'From' email field to differentiate alerts from different websites
+
+2.2
+index.php | scan function comments
+index.php | amfTitle() function removed (not used)
+index.php | Email Template | code re-formatting
+index.php | Email Template | add Website URL inside message body to differentiate alerts from different websites
+index.php | $iter -> $iterator variable name
+index.php | RecursiveIteratorIterator class code reformat
+index.php | Routes code moved -> bottom before Hooks section
+view_changes.php | add Quick Jump section (MODIFIED/NEW/DELETED) + redesign CLEAR/RETURN section + unify buttons + add <div> wrapper
+admin_settings.php | redesign + strings translations
+
+2.1
+index.php | removed js_afm_message function (deprecated / useless)
+admin_settings.php | remove js_amf_message() calls (deprecated / useless)
+index.php Function Code Reformatting / Re-Structure
+view_changes.php | <div> buttons wrapper + float:right CSS style
+
+2.0
+index.php | Flash Message Warning - added route location check | now it does not show @ view_changes.php page | remaining issue: duplicate flash message @ General Settings section (!?)
+index.php | Admin Menu & Title functions moved below
+view_changes.php | RETURN BUTTON - added return shortcut
+view_changes.php | btn btn-submit classes
+
+1.9
+Plugin now correctly displays/lists ALL files altered/modified, not just the first one
+index.php | Fix single altered/modified file storing & listing (via multi-dimensional array insert)
+view_changes.php | adapt Modified Files table code to reflect above changes
+debug functions/hooks/code added
+Removed Help function & hooks
+
+1.8
+Empty email notification tables
+
+1.7
+AFM_KEY removed
+Fix empty email notification $body issue
+Fix email notification distorted $body via PHP_EOL
+Fix flash messages sequencing
+Auto-Redirects @ admin_settings.php
+View Scan Results button shortcut @ admin_settings.php
+
+1.6
+Removed Email Templates page @ database
+Insert hard-coded Email Template @ index.php (english)
+Include old+new SHA1 key values into email notification
+Include complete list of altered/new/deleted files into email notification
+View Changes complete table rewrite & html fixes
+
+1.5
+Code Reformatting
+Change AFM_KEY constant
+Change s_section name from 'plugin-afm' into 'advanced-file-monitor' in t_preference table
+Change Helper functions names to avoid potential collisions
+
+	afm_get_options()
+	afm_get_files()
+	afm_get_diffs()
+
+1.4
+Added suport for the new routes added in Osclass 3.2
+Prepared the plugin to be included into the Osclass market
+
+1.3
+Add some more security checks
+
+1.2
+Fixed the path so it now updates in the database
+Fixed it so the saved path is the path that is used in the scan.
+
+1.1
+Some security patches
+
+1.0
+First release

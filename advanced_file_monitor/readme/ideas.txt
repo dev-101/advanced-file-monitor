@@ -1,0 +1,3 @@
+- Add logging table (or use Osclass t_log) and place each scan results with date timestamp
+
+- Add page with log read-out by date
