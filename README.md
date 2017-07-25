@@ -1,6 +1,9 @@
 # advanced-file-monitor
 System Integrity Check plugin for Osclass
 
+forum:
+https://forums.osclass.org/plugins/(free-plugin)-advanced-file-monitor-file-system-integrity-scanner/
+
 This plugin was initially created buy Jay, but it was abandoned after last public release 1.3 or 1.4.
 Afterwards, I have took the plugin and continued it's development privately. Now, it is released for public use and it's free!
 
