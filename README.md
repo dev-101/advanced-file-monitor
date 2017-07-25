@@ -5,7 +5,7 @@ This plugin was initially created buy Jay, but it was abandoned after last publi
 Afterwards, I have took the plugin and continued it's development privately. Now, it is released for public use and it's free!
 
 Please note that there are many ideas for improvements, but I cannot promise when they'll be implemented.
-Suggestions & Contributions from other developers is welcomed.
+Suggestions & Contributions from other developers is welcome.
 
 I strongly suggest to use this plugin on powerfull or high-end servers, because scanning filesystem and calculating hashes can be intensive task for budget lowend boxes.
 
