@@ -31,6 +31,16 @@ Q: I have added (or removed) some directories from the exclude section, and now 
 
 A: Yes, this is by design for several reasons. But, most importantly, this is happening because old snapshot is still present and the plugin has 'remembered' old files (or did not had any knowledge of newly included directories that were previously ignored). So, you will have to perform CLEAR of the new state, and plugin will continue to operate as intended from that point.
 
+Q: I run a NASA-grade server and wish to initiate scans every 5 or 15 minutes. Is it possible?
+
+A: Yes. Manual external cron can be triggered directly via browser by specifying the mcron.php file URL address (check below example). However, manual cron task can also be fully automated. Setup new cron job by directly calling mcron.php file (for extra security reasons you may rename the file to any random name with .php extension).
+
+    Manual Cron via direct URL access example: (from browser)  
+    http : // www . my-website . com/oc-content/plugins/advanced_file_monitor/mcron.php  
+
+    Manual Cron with WGET example: (every 15 minutes)  
+    0,15,30,45 * * * * wget -O /dev/null 2>&1 http : // www . my-website . com/oc-content/plugins/advanced_file_monitor/mcron.php  
+
 # LINKS
 
 forum:
