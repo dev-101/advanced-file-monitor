@@ -9,9 +9,6 @@ Suggestions & Contributions from other developers is welcome.
 
 I strongly suggest to use this plugin on powerfull or high-end servers, because scanning filesystem and calculating hashes can be intensive task for budget lowend boxes.
 
-If you have problems installing the plugin (during which initial scan is performed for reference), please before reporting an ISSUE, enable Osclass MySQL debug log and see what error do you receive.
-If you receive Error 2006 MySQL server has gone away, you have reached the timeout limit on your server (or low memory problem). In this case, you will either have to upgrade your server, or add more directories in the excluded list MANUALLY inside plugin's index.php file (~ lines 44+) BEFORE trying to install plugin again.
-
 # FAQ
 
 Q: What is Advanced File Monitor plugin?
