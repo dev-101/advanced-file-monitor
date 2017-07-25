@@ -33,7 +33,7 @@ A: Yes, this is by design for several reasons. But, most importantly, this is ha
 
 Q: I run a NASA-grade server and wish to initiate scans every 5 or 15 minutes. Is it possible?
 
-A: Yes. Manual external cron can be triggered directly via browser by specifying the mcron.php file URL address (check below example). However, manual cron task can also be fully automated. Setup new cron job by directly calling mcron.php file (for extra security reasons you may rename the file to any random name with .php extension).
+A: Yes. Manual external cron can be triggered directly via browser by specifying the mcron.php file URL address or fully automated. Setup new cron job by directly calling mcron.php file (for extra security reasons you may rename the file to any random name with .php extension).
 
     Manual Cron via direct URL access example: (from browser)  
     http : // www . my-website . com/oc-content/plugins/advanced_file_monitor/mcron.php  
