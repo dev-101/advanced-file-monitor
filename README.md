@@ -23,6 +23,10 @@ Q: I haven't received any alert email.
 
 A: Check your SPAM folder. Because of the huge size of emails and their structure, Google usually marks it as spam for the first time. Once you 'report' it as not spam, it should no longer end up there.
 
+Q: I have (finally) installed it, but I don't see it in the usual Plugins Menu. Where is it?
+
+A: Go to Tools menu > Advanced File Monitor (it is not in the regular plugin list!). Alternatively, you can access it via Configure link in Plugins Table.
+
 # LINKS
 
 forum:
