@@ -1,4 +1,4 @@
-# advanced-file-monitor
+# Advanced File Monitor
 System Integrity Check plugin for Osclass
 
 This plugin was initially created buy Jay, but it was abandoned after last public release 1.3 or 1.4.
