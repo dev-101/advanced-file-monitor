@@ -27,6 +27,10 @@ Q: I have (finally) installed it, but I don't see it in the usual Plugins Menu. 
 
 A: Go to Tools menu > Advanced File Monitor (it is not in the regular plugin list!). Alternatively, you can access it via Configure link in Plugins Table.
 
+Q: I have added (or removed) some directories from the exclude section, and now plugin reports massive amount of New (or Deleted) files. But, files are still there! Is this normal/expected behavior?
+
+A: Yes, this is by design for several reasons. But, most importantly, this is happening because old snapshot is still present and the plugin has 'remembered' old files (or did not had any knowledge of newly included directories that were previously ignored). So, you will have to perform CLEAR of the new state, and plugin will continue to operate as intended from that point.
+
 # LINKS
 
 forum:
