@@ -1,7 +1,7 @@
 # Advanced File Monitor
 System Integrity Check plugin for Osclass
 
-This plugin was initially created buy Jay, but it was abandoned after last public release 1.3 or 1.4.
+This plugin was initially created by Jay, but it was abandoned after last public release 1.3 or 1.4.
 Afterwards, I have took the plugin and continued it's development privately. Now, it is released for public use and it's free!
 
 Please note that there are many ideas for improvements, but I cannot promise when they'll be implemented.
