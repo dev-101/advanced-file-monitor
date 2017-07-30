@@ -1,3 +1,7 @@
+4.5
+clear bug fix
+admin_settings.php | admin re-style
+
 4.4
 System Path :: Base Scan Path change detection & error flash message warning (e.g. when renaming root Osclass directory or tranferring installation to another domain)
 index.php | Change debug hook priority to lowest level (10)
