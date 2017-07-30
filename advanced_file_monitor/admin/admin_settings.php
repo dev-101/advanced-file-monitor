@@ -183,9 +183,9 @@
 
 		<!-- Manual Scan Results -->
 		<?php if(osc_version() >= 320 ) { ?>
-			<a class="btn btn-submit" href="<?php osc_admin_base_url(true); ?>?page=plugins&action=renderplugin&route=afm-scan"><?php _e('VIEW RESULTS','advanced_file_monitor'); ?></a>
+			<a class="btn btn-submit" style="background-color:#FF7500;" href="<?php osc_admin_base_url(true); ?>?page=plugins&action=renderplugin&route=afm-scan"><?php _e('VIEW RESULTS','advanced_file_monitor'); ?></a>
 		<?php } else { ?>
-			<a class="btn btn-submit" href="<?php osc_admin_base_url(true); ?>?page=plugins&action=renderplugin&file=advanced_file_monitor/admin/admin_settings.php"><?php _e('VIEW RESULTS','advanced_file_monitor'); ?></a>
+			<a class="btn btn-submit" style="background-color:#FF7500;" href="<?php osc_admin_base_url(true); ?>?page=plugins&action=renderplugin&file=advanced_file_monitor/admin/admin_settings.php"><?php _e('VIEW RESULTS','advanced_file_monitor'); ?></a>
 		<?php } ?>
 	</div>
 		<br/>
@@ -194,52 +194,58 @@
 		<hr style="border-style:ridge;" /><br/>
 
 		<!-- Base Scan Path -->
-		<label for="path" style="font-weight:700; background-color:#EEE; padding:5px; width:50%; display:inline-block; max-width:500px; border:1px solid #CCC;"><?php _e('Base Scan Path', 'advanced_file_monitor'); ?></label>
+		<label for="path" style="font-weight:700; background-color:#EEE; padding:8px 1%; width:98%; display:inline-block; border:1px solid #CCC; border-bottom: 3px solid #333;"><?php _e('Base Scan Path', 'advanced_file_monitor'); ?></label>
 		<br/><br/>
-		<span style="font-size:small;color:gray;"><?php echo __('System Path:' , 'advanced_file_monitor') , ' ' , osc_base_path(); ?></span>
+		<span style="font-size:small;color:gray;"><?php echo __('System Path' , 'advanced_file_monitor'); ?>: <strong><?php echo osc_base_path(); ?></strong></span>
 		<br/>
-		<input type="text" name="path" id="path" placeholder="<?php echo osc_base_path(); ?>" value="<?php echo osc_get_preference('afm_path', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #F60; -moz-box-shadow:inset 0 1px 1px #F60; -webkit-box-shadow:inset 0 1px 1px #F60;" />
+		<input type="text" name="path" id="path" placeholder="<?php echo osc_base_path(); ?>" value="<?php echo osc_get_preference('afm_path', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #F60; -moz-box-shadow:inset 0 1px 1px #F60; -webkit-box-shadow:inset 0 1px 1px #F60;" />
 		<br/><br/><hr style="border-style:ridge;" /><br/>
 
-		<!-- Directories -->
-		<label for="directories" style="font-weight:700; background-color:#EEE; padding:5px; width:50%; display:inline-block; max-width:500px; border:1px solid #CCC;"><?php _e('Exclude Directories', 'advanced_file_monitor'); ?></label>
+		<!-- Exclude Files/Directories -->
+		<label for="directories" style="font-weight:700; background-color:#EEE; padding:8px 1%; width:98%; display:inline-block; border:1px solid #CCC; border-bottom: 3px solid #333;"><?php _e('Exclude Files/Directories', 'advanced_file_monitor'); ?></label>
 		<br/><br/>
 		<span style="font-size:small;color:gray;">
-		<?php echo __('Example' , 'advanced_file_monitor'); ?>: <strong>oc-content/uploads</strong>
+		<?php echo __('Example 1' , 'advanced_file_monitor'); ?>: <strong>sitemap.xml</strong>
+		<br/>
+		<?php echo __('Example 2' , 'advanced_file_monitor'); ?>: <strong>my-root-directory</strong>
+		<br/>
+		<?php echo __('Example 3' , 'advanced_file_monitor'); ?>: <strong>oc-content/example</strong>
+		<br/>
+		<?php echo __('Example 4' , 'advanced_file_monitor'); ?>: <strong>oc-content/uploads</strong> (default)
 		<br/><br/>
 		<strong>IMPORTANT</strong>
 		<br/>
-		Fill-in input fields in ordered fashion and insert <strong>relative</strong> directory paths
+		Fill-in below input fields in ordered fashion (01, 02, 03...) and insert <strong>relative</strong> directory paths
 		<br/>
-		Do not enter multiple values separated with comma or leave blank fields in between
+		Do not enter multiple values separated with comma or leave blank fields in between!
 		</span>
 		<br/><br/>
 
-		<input type="text" name="exDir_01" id="exDir_01" placeholder="01." value="<?php echo osc_get_preference('afm_exDir_01', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_02" id="exDir_02" placeholder="02." value="<?php echo osc_get_preference('afm_exDir_02', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_03" id="exDir_03" placeholder="03." value="<?php echo osc_get_preference('afm_exDir_03', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_04" id="exDir_04" placeholder="04." value="<?php echo osc_get_preference('afm_exDir_04', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_05" id="exDir_05" placeholder="05." value="<?php echo osc_get_preference('afm_exDir_05', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_06" id="exDir_06" placeholder="06." value="<?php echo osc_get_preference('afm_exDir_06', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_07" id="exDir_07" placeholder="07." value="<?php echo osc_get_preference('afm_exDir_07', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_08" id="exDir_08" placeholder="08." value="<?php echo osc_get_preference('afm_exDir_08', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_09" id="exDir_09" placeholder="09." value="<?php echo osc_get_preference('afm_exDir_09', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_10" id="exDir_10" placeholder="10." value="<?php echo osc_get_preference('afm_exDir_10', 'advanced-file-monitor'); ?>" style="width:100%; max-width:500px; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_01" id="exDir_01" placeholder="01." value="<?php echo osc_get_preference('afm_exDir_01', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_02" id="exDir_02" placeholder="02." value="<?php echo osc_get_preference('afm_exDir_02', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_03" id="exDir_03" placeholder="03." value="<?php echo osc_get_preference('afm_exDir_03', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_04" id="exDir_04" placeholder="04." value="<?php echo osc_get_preference('afm_exDir_04', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_05" id="exDir_05" placeholder="05." value="<?php echo osc_get_preference('afm_exDir_05', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_06" id="exDir_06" placeholder="06." value="<?php echo osc_get_preference('afm_exDir_06', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_07" id="exDir_07" placeholder="07." value="<?php echo osc_get_preference('afm_exDir_07', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_08" id="exDir_08" placeholder="08." value="<?php echo osc_get_preference('afm_exDir_08', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_09" id="exDir_09" placeholder="09." value="<?php echo osc_get_preference('afm_exDir_09', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
+		<input type="text" name="exDir_10" id="exDir_10" placeholder="10." value="<?php echo osc_get_preference('afm_exDir_10', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
 
 		<br/><hr style="border-style:ridge;" /><br/>
 
 		<!-- Extensions -->
-		<label for="extensions" style="font-weight:700; background-color:#EEE; padding:5px; width:50%; display:inline-block; max-width:500px; border:1px solid #CCC;"><?php _e('Exclude File Extensions', 'advanced_file_monitor'); ?></label>
+		<label for="extensions" style="font-weight:700; background-color:#EEE; padding:8px 1%; width:98%; display:inline-block; border:1px solid #CCC; border-bottom: 3px solid #333;"><?php _e('Exclude File Extensions (Global)', 'advanced_file_monitor'); ?></label>
 		<br/><br/>
 		<div style="display:inline-block; clear:both; float:left; margin-bottom:15px; font-size:small; color:gray; width:100%; max-width:500px;">
 			<?php echo __('Example' , 'advanced_file_monitor'); ?>: <strong><?php echo 'xml,txt,ico,jpg,bmp,gif,zip,sql'; ?></strong> (comma separated values)
 		</div>
 		<br/><br/>
-		<input type="text" name="extensions" id="extensions" value="<?php echo osc_get_preference('afm_extensions', 'advanced-file-monitor'); ?>" style="display:block; clear:both; width:100%; max-width:500px; box-shadow:inset 0 1px 1px #16C562; -moz-box-shadow:inset 0 1px 1px #16C562; -webkit-box-shadow:inset 0 1px 1px #16C562;" />
+		<input type="text" name="extensions" id="extensions" value="<?php echo osc_get_preference('afm_extensions', 'advanced-file-monitor'); ?>" style="display:block; clear:both; margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #16C562; -moz-box-shadow:inset 0 1px 1px #16C562; -webkit-box-shadow:inset 0 1px 1px #16C562;" />
 		<br/><hr style="border-style:ridge;" /><br/>
 
 		<!-- Cron Job -->
-		<label for="cron" style="font-weight:700; background-color:#EEE; padding:5px; width:50%; display:inline-block; max-width:500px; border:1px solid #CCC;"><?php _e('Scan Cron', 'advanced_file_monitor'); ?></label>
+		<label for="cron" style="font-weight:700; background-color:#EEE; padding:8px 1%; width:98%; display:inline-block; border:1px solid #CCC; border-bottom: 3px solid #333;"><?php _e('Scan Cron', 'advanced_file_monitor'); ?></label>
 		<br/><br/>
 		<select name="cron" id="cron" />
 			<?php $cron = osc_get_preference('afm_cron', 'advanced-file-monitor'); ?>
