@@ -2,13 +2,14 @@
 
 <?php
 	if(Params::getParam('afmAction') === 'clear') {
-		$dao_preference = new Preference();
 		$diffB = afm_get_diffs();
 
-		$dao_preference->update(array("s_value" => serialize(@$diffB['files']) ), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_files")) ;
-		$dao_preference->update(array("s_value" => '' ), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_diffs")) ;
+		$dao_preference = new Preference();
+		$dao_preference->update(array("s_value" => ''), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_files")) ;
+		$dao_preference->update(array("s_value" => ''), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_diffs")) ;
 		unset($dao_preference);
 		osc_reset_preferences();
+
 		header('Location: ' . osc_admin_base_url(true) . '?page=plugins&action=renderplugin&route=afm-settings');
 	}
 ?>
@@ -61,10 +62,8 @@
 
 <!-- Modified Files -->
 <?php if(!empty($diffs['alt'])) { ?>
-
 	<h2 id="mod"><?php _e('Modified Files', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
-
 		<thead>
 			<tr>
 				<th><?php _e('N', 'advanced_file_monitor'); ?></th>
@@ -87,7 +86,6 @@
 			<?php $i++; } ?>
 		<?php } ?>
 		</tbody>
-
 	</table>
 <?php } ?>
 
@@ -95,7 +93,6 @@
 <?php if(!empty($diffs['add'])) { ?>
 	<h2 id="new"><?php _e('New Files', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
-
 		<thead>
 			<tr>
 				<th><?php _e('N', 'advanced_file_monitor'); ?></th>
@@ -114,7 +111,6 @@
 			</tr>
 		<?php $i++; } ?>
 		</tbody>
-
 	</table>
 <?php } ?>
 
@@ -122,7 +118,6 @@
 <?php if(!empty($diffs['del'])) { ?>
 	<h2 id="del"><?php _e('Deleted Files', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
-
 		<thead>
 			<th><?php _e('N', 'advanced_file_monitor'); ?></th>
 			<th><?php _e('File', 'advanced_file_monitor'); ?></th>
@@ -139,7 +134,6 @@
 			</tr>
 		<?php $i++; } ?>
 		</tbody>
-
 	</table>
 <?php } ?>
 
