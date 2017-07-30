@@ -3,7 +3,7 @@
 Plugin Name: Advanced File Monitor
 Plugin URI:
 Description: Alerts Admins whenever system files modifications are detected
-Version: 4.4 mod
+Version: 4.5 mod
 Author: JChapman & dev101
 Author URI:
 Update URI:
@@ -21,14 +21,14 @@ function afm_install () {
 		osc_set_preference('afm_path', $base_path, 'advanced-file-monitor', 'STRING');
 		osc_set_preference('afm_cron', $cron, 'advanced-file-monitor', 'STRING');
 
-		// set extensions
-		osc_set_preference('afm_extensions', '', 'advanced-file-monitor', 'STRING');
-
 		// set scan results
 		osc_set_preference('afm_files', '', 'advanced-file-monitor', 'STRING');
 		osc_set_preference('afm_diffs', '', 'advanced-file-monitor', 'STRING');
 
-		// set directories
+		// set excluded extensions (global)
+		osc_set_preference('afm_extensions', '', 'advanced-file-monitor', 'STRING');
+
+		// set excluded directories
 		osc_set_preference('afm_exDir_01', 'oc-content/uploads', 'advanced-file-monitor', 'STRING');
 		osc_set_preference('afm_exDir_02', '', 'advanced-file-monitor', 'STRING');
 		osc_set_preference('afm_exDir_03', '', 'advanced-file-monitor', 'STRING');
@@ -39,6 +39,7 @@ function afm_install () {
 		osc_set_preference('afm_exDir_08', '', 'advanced-file-monitor', 'STRING');
 		osc_set_preference('afm_exDir_09', '', 'advanced-file-monitor', 'STRING');
 		osc_set_preference('afm_exDir_10', '', 'advanced-file-monitor', 'STRING');
+
 		osc_reset_preferences();
 
 		// run initial scan
@@ -53,9 +54,11 @@ function afm_install () {
 function afm_uninstall() {
 	osc_delete_preference('afm_path', 'advanced-file-monitor');
 	osc_delete_preference('afm_cron', 'advanced-file-monitor');
-	osc_delete_preference('afm_extensions', 'advanced-file-monitor');
 	osc_delete_preference('afm_files', 'advanced-file-monitor');
 	osc_delete_preference('afm_diffs', 'advanced-file-monitor');
+
+	osc_delete_preference('afm_extensions', 'advanced-file-monitor');
+
 	osc_delete_preference('afm_exDir_01', 'advanced-file-monitor');
 	osc_delete_preference('afm_exDir_02', 'advanced-file-monitor');
 	osc_delete_preference('afm_exDir_03', 'advanced-file-monitor');
@@ -111,10 +114,11 @@ function afm_scan($man = 'no', $scanPath = null) {
 	$dir_preg_match_pattern_09 = '~'.$excludeDir_09.'+~';
 	$dir_preg_match_pattern_10 = '~'.$excludeDir_10.'+~';
 
+
 	// get excluded extensions
 	$extensions = osc_get_preference('afm_extensions', 'advanced-file-monitor');
 
-	// set array container
+	// set files array container
 	$files = array();
 
 	// iteration class
@@ -298,7 +302,7 @@ function afm_scan($man = 'no', $scanPath = null) {
 	}
 
 	// check first time scan
-	if(afm_get_files() == '') {
+	if(afm_get_files() == '' || empty(afm_get_files())) {
 		$dao_preference = new Preference();
 		$dao_preference->update(array("s_value" => serialize($files) ), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_files"));
 		unset($dao_preference);
@@ -352,6 +356,7 @@ function afm_scan($man = 'no', $scanPath = null) {
 
 			unset($tmp);
 
+			// store differences
 			$dao_preference = new Preference();
 			$dao_preference->update(array("s_value" => serialize($diffs)), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_diffs"));
 			unset($dao_preference);
@@ -595,7 +600,7 @@ function advanced_ad_management_config() {
 #######################################
 # Debug AMF | uncomment hook to debug #
 #######################################
-function amf_debug() {
+function afm_debug() {
 
 	//$diffs = afm_get_diffs();
 	//echo '<pre>';
@@ -873,7 +878,7 @@ function amf_debug() {
 ######################
 # uncomment to debug #
 ######################
-//osc_add_hook('admin_footer', 'amf_debug', 10);
+//osc_add_hook('admin_footer', 'afm_debug', 10);
 
 /** ROUTES **/
 
