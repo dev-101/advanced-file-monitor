@@ -302,7 +302,7 @@ function afm_scan($man = 'no', $scanPath = null) {
 	}
 
 	// check first time scan
-	if(afm_get_files() == '' || empty(afm_get_files())) {
+	if (afm_get_files() == '' || afm_get_files() == null) {
 		$dao_preference = new Preference();
 		$dao_preference->update(array("s_value" => serialize($files) ), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_files"));
 		unset($dao_preference);
