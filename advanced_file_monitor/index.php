@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Advanced File Monitor
-Plugin URI:
+Plugin URI: 
 Description: Alerts Admins whenever system files modifications are detected
-Version: 4.5 mod
+Version: 4.6 mod
 Author: JChapman & dev101
-Author URI:
-Update URI:
+Author URI: 
+Update URI: 
 Short Name: AFM
 */
 
@@ -28,17 +28,8 @@ function afm_install () {
 		// set excluded extensions (global)
 		osc_set_preference('afm_extensions', '', 'advanced-file-monitor', 'STRING');
 
-		// set excluded directories
-		osc_set_preference('afm_exDir_01', 'oc-content/uploads', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_02', '', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_03', '', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_04', '', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_05', '', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_06', '', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_07', '', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_08', '', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_09', '', 'advanced-file-monitor', 'STRING');
-		osc_set_preference('afm_exDir_10', '', 'advanced-file-monitor', 'STRING');
+		// set excluded files/directories
+		osc_set_preference('afm_directories', 'oc-content/uploads', 'advanced-file-monitor', 'STRING');
 
 		osc_reset_preferences();
 
@@ -56,19 +47,13 @@ function afm_uninstall() {
 	osc_delete_preference('afm_cron', 'advanced-file-monitor');
 	osc_delete_preference('afm_files', 'advanced-file-monitor');
 	osc_delete_preference('afm_diffs', 'advanced-file-monitor');
-
 	osc_delete_preference('afm_extensions', 'advanced-file-monitor');
+	osc_delete_preference('afm_directories', 'advanced-file-monitor');
+}
 
-	osc_delete_preference('afm_exDir_01', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_02', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_03', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_04', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_05', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_06', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_07', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_08', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_09', 'advanced-file-monitor');
-	osc_delete_preference('afm_exDir_10', 'advanced-file-monitor');
+// Regex Utility
+function afm_escape_regex_pattern($string) {
+	return '~'.$string.'+~';
 }
 
 // Get Reference
@@ -90,30 +75,19 @@ function afm_scan($man = 'no', $scanPath = null) {
 	// get scan path
 	$path = osc_get_preference('afm_path', 'advanced-file-monitor');
 
+	// set excluded directory match
+	$matchDir = 0;
+
 	// get excluded directories
-	$excludeDir_01 = osc_get_preference('afm_exDir_01', 'advanced-file-monitor');
-	$excludeDir_02 = osc_get_preference('afm_exDir_02', 'advanced-file-monitor');
-	$excludeDir_03 = osc_get_preference('afm_exDir_03', 'advanced-file-monitor');
-	$excludeDir_04 = osc_get_preference('afm_exDir_04', 'advanced-file-monitor');
-	$excludeDir_05 = osc_get_preference('afm_exDir_05', 'advanced-file-monitor');
-	$excludeDir_06 = osc_get_preference('afm_exDir_06', 'advanced-file-monitor');
-	$excludeDir_07 = osc_get_preference('afm_exDir_07', 'advanced-file-monitor');
-	$excludeDir_08 = osc_get_preference('afm_exDir_08', 'advanced-file-monitor');
-	$excludeDir_09 = osc_get_preference('afm_exDir_09', 'advanced-file-monitor');
-	$excludeDir_10 = osc_get_preference('afm_exDir_10', 'advanced-file-monitor');
-
-	// preg_match escape excluded directories
-	$dir_preg_match_pattern_01 = '~'.$excludeDir_01.'+~';
-	$dir_preg_match_pattern_02 = '~'.$excludeDir_02.'+~';
-	$dir_preg_match_pattern_03 = '~'.$excludeDir_03.'+~';
-	$dir_preg_match_pattern_04 = '~'.$excludeDir_04.'+~';
-	$dir_preg_match_pattern_05 = '~'.$excludeDir_05.'+~';
-	$dir_preg_match_pattern_06 = '~'.$excludeDir_06.'+~';
-	$dir_preg_match_pattern_07 = '~'.$excludeDir_07.'+~';
-	$dir_preg_match_pattern_08 = '~'.$excludeDir_08.'+~';
-	$dir_preg_match_pattern_09 = '~'.$excludeDir_09.'+~';
-	$dir_preg_match_pattern_10 = '~'.$excludeDir_10.'+~';
-
+	$excludeDirs = osc_get_preference('afm_directories', 'advanced-file-monitor');
+	// replace comma with new line
+	$excludeDirs = str_replace(',', PHP_EOL, $excludeDirs);
+	// string into array
+	$aExcludeDirs = explode(PHP_EOL, trim($excludeDirs));
+	// trim array elements
+	$aExcludeDirs = array_map('trim', $aExcludeDirs);
+	// remove empty/NULL array elements
+	$aExcludeDirs = array_filter($aExcludeDirs);
 
 	// get excluded extensions
 	$extensions = osc_get_preference('afm_extensions', 'advanced-file-monitor');
@@ -137,164 +111,31 @@ function afm_scan($man = 'no', $scanPath = null) {
 	while($iterator->valid()) {
 
 		// iterator conditions
-		if(!$iterator->isDot() && $iterator->isReadable()) {
+		if (!$iterator->isDot() && $iterator->isReadable()) {
 
-			// skip directories #1
-			if($excludeDir_01 != '' && $excludeDir_02 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
+			// skip directories match check
+			if (!empty($aExcludeDirs)) {
+				foreach ($aExcludeDirs as $aExcludeDir) {
+					// if match found
+					if (preg_match(afm_escape_regex_pattern($aExcludeDir), $iterator->getPathname()) === 1) {
+						$matchDir = $matchDir + 1;
 					}
 				}
 			}
 
-			// skip directories #2
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #3
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #4
-			elseif($excludeDir_01 != '' && $excludeDir_02 != ''&& $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #5
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #6
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 != '' && $excludeDir_07 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #7
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 != '' && $excludeDir_07 != '' && $excludeDir_08 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_07, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #8
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 != '' && $excludeDir_07 != '' && $excludeDir_08 != '' && $excludeDir_09 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_07, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_08, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #9
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 != '' && $excludeDir_07 != '' && $excludeDir_08 != '' && $excludeDir_09 != '' && $excludeDir_10 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_07, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_08, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_09, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #10
-			else {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_07, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_08, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_09, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_10, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
+			if ($matchDir === 0) {
+				// skip extensions
+				if (stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
+					// storage layer
+					$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
+					$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
 				}
 			}
 
 		}
+
+		// reset $matchDir
+		$matchDir = 0;
 
 		// move iterator pointer
 		$iterator->next();
@@ -406,7 +247,7 @@ function afm_email() {
 
 		// altered files
 		if(!empty($diffs['alt'])) {
-			$body .= '<h2>Modified Files</h2>' . PHP_EOL;
+			$body .= '<h2>Modified Keys</h2>' . PHP_EOL;
 			$body .= '<table border="1">' . PHP_EOL;
 			$body .= '<thead>' . PHP_EOL;
 			$body .= '<tr>' . PHP_EOL;
@@ -440,7 +281,7 @@ function afm_email() {
 
 		// new files
 		if(!empty($diffs['add'])) {
-			$body .= '<h2>New Files</h2>' . PHP_EOL;
+			$body .= '<h2>New Keys</h2>' . PHP_EOL;
 			$body .= '<table border="1">' . PHP_EOL;
 			$body .= '<thead>' . PHP_EOL;
 			$body .= '<tr>' . PHP_EOL;
@@ -466,7 +307,7 @@ function afm_email() {
 
 		// deleted files
 		if(!empty($diffs['del'])) {
-			$body .= '<h2>Deleted Files</h2>' . PHP_EOL;
+			$body .= '<h2>Deleted Keys</h2>' . PHP_EOL;
 			$body .= '<table border="1">' . PHP_EOL;
 			$body .= '<thead>' . PHP_EOL;
 			$body .= '<tr>' . PHP_EOL;
@@ -613,29 +454,19 @@ function afm_debug() {
 	// get scan path
 	$path = osc_get_preference('afm_path', 'advanced-file-monitor');
 
-	// get excluded directories
-	$excludeDir_01 = osc_get_preference('afm_exDir_01', 'advanced-file-monitor');
-	$excludeDir_02 = osc_get_preference('afm_exDir_02', 'advanced-file-monitor');
-	$excludeDir_03 = osc_get_preference('afm_exDir_03', 'advanced-file-monitor');
-	$excludeDir_04 = osc_get_preference('afm_exDir_04', 'advanced-file-monitor');
-	$excludeDir_05 = osc_get_preference('afm_exDir_05', 'advanced-file-monitor');
-	$excludeDir_06 = osc_get_preference('afm_exDir_06', 'advanced-file-monitor');
-	$excludeDir_07 = osc_get_preference('afm_exDir_07', 'advanced-file-monitor');
-	$excludeDir_08 = osc_get_preference('afm_exDir_08', 'advanced-file-monitor');
-	$excludeDir_09 = osc_get_preference('afm_exDir_09', 'advanced-file-monitor');
-	$excludeDir_10 = osc_get_preference('afm_exDir_10', 'advanced-file-monitor');
+	// set excluded directory match
+	$matchDir = 0;
 
-	// preg_match escape excluded directories
-	$dir_preg_match_pattern_01 = '~'.$excludeDir_01.'+~';
-	$dir_preg_match_pattern_02 = '~'.$excludeDir_02.'+~';
-	$dir_preg_match_pattern_03 = '~'.$excludeDir_03.'+~';
-	$dir_preg_match_pattern_04 = '~'.$excludeDir_04.'+~';
-	$dir_preg_match_pattern_05 = '~'.$excludeDir_05.'+~';
-	$dir_preg_match_pattern_06 = '~'.$excludeDir_06.'+~';
-	$dir_preg_match_pattern_07 = '~'.$excludeDir_07.'+~';
-	$dir_preg_match_pattern_08 = '~'.$excludeDir_08.'+~';
-	$dir_preg_match_pattern_09 = '~'.$excludeDir_09.'+~';
-	$dir_preg_match_pattern_10 = '~'.$excludeDir_10.'+~';
+	// get excluded directories
+	$excludeDirs = osc_get_preference('afm_directories', 'advanced-file-monitor');
+	// replace comma with new line
+	$excludeDirs = str_replace(',', PHP_EOL, $excludeDirs);
+	// string into array
+	$aExcludeDirs = explode(PHP_EOL, trim($excludeDirs));
+	// trim array elements
+	$aExcludeDirs = array_map('trim', $aExcludeDirs);
+	// remove empty/NULL array elements
+	$aExcludeDirs = array_filter($aExcludeDirs);
 
 	// get excluded extensions
 	$extensions = osc_get_preference('afm_extensions', 'advanced-file-monitor');
@@ -659,164 +490,31 @@ function afm_debug() {
 	while($iterator->valid()) {
 
 		// iterator conditions
-		if(!$iterator->isDot() && !$iterator->isDir() && $iterator->isReadable()) {
+		if (!$iterator->isDot() && $iterator->isReadable()) {
 
-			// skip directories #1
-			if($excludeDir_01 != '' && $excludeDir_02 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
+			// skip directories match check
+			if (!empty($aExcludeDirs)) {
+				foreach ($aExcludeDirs as $aExcludeDir) {
+					// if match found
+					if (preg_match(afm_escape_regex_pattern($aExcludeDir), $iterator->getPathname()) === 1) {
+						$matchDir = $matchDir + 1;
 					}
 				}
 			}
 
-			// skip directories #2
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #3
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #4
-			elseif($excludeDir_01 != '' && $excludeDir_02 != ''&& $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #5
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #6
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 != '' && $excludeDir_07 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #7
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 != '' && $excludeDir_07 != '' && $excludeDir_08 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_07, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #8
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 != '' && $excludeDir_07 != '' && $excludeDir_08 != '' && $excludeDir_09 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_07, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_08, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #9
-			elseif($excludeDir_01 != '' && $excludeDir_02 != '' && $excludeDir_03 != '' && $excludeDir_04 != '' && $excludeDir_05 != '' && $excludeDir_06 != '' && $excludeDir_07 != '' && $excludeDir_08 != '' && $excludeDir_09 != '' && $excludeDir_10 == '') {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_07, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_08, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_09, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
-				}
-			}
-
-			// skip directories #10
-			else {
-				if(	preg_match($dir_preg_match_pattern_01, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_02, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_03, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_04, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_05, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_06, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_07, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_08, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_09, $iterator->getPathname()) === 0
-				&&	preg_match($dir_preg_match_pattern_10, $iterator->getPathname()) === 0 ) {
-					if(stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
-						// storage layer
-						$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
-						$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
-					}
+			if ($matchDir === 0) {
+				// skip extensions
+				if (stripos($extensions, strtolower($iterator->getExtension())) === FALSE) {
+					// storage layer
+					$key = str_replace('\\', '/', $iterator->key()); // unify path structure in Windows and Linux
+					$files[$key] = @hash_file('sha1', $key); // suppress PHP Warning in Windows: hash_file(): failed to open stream: Permission denied
 				}
 			}
 
 		}
+
+		// reset $matchDir
+		$matchDir = 0;
 
 		// move iterator pointer
 		$iterator->next();
@@ -908,5 +606,4 @@ $cron = osc_get_preference('afm_cron', 'advanced-file-monitor');
 if($cron != 'MANUAL') {
 	osc_add_hook('cron_' . $cron, 'afm_cron_function');
 }
-
 ?>
