@@ -55,85 +55,26 @@
 		}
 
 		// Directories
-		if(Params::getParam('exDir_01') != '') {
-			$exDir_01 = Params::getParam('exDir_01');
-			$exDir_01 = trim($exDir_01); // trim space
-			$exDir_01 = str_replace('\\', '/', $exDir_01); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_01', $exDir_01, 'advanced-file-monitor', 'STRING');
+		if(Params::getParam('afm_directories') != '') {
+			$afm_directories = Params::getParam('afm_directories');
+			// trim
+			$afm_directories = trim($afm_directories); // trim space
+			// unify path structure in Windows and Linux
+			$afm_directories = str_replace('\\', '/', $afm_directories); // unify slash on Linux and Windows
+			// replace comma with new line
+			$afm_directories = str_replace(',', PHP_EOL, $afm_directories);
+			// string into array
+			$afm_directories = explode(PHP_EOL, trim($afm_directories));
+			// trim array elements
+			$afm_directories = array_map('trim', $afm_directories);
+			// remove empty/NULL array elements
+			$afm_directories = array_filter($afm_directories);
+			// array into string
+			$afm_directories = implode($afm_directories, PHP_EOL);
+
+			osc_set_preference('afm_directories', $afm_directories, 'advanced-file-monitor', 'STRING');
 		} else {
-			osc_set_preference('afm_exDir_01', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_02') != '') {
-			$exDir_02 = Params::getParam('exDir_02');
-			$exDir_02 = trim($exDir_02); // trim space
-			$exDir_02 = str_replace('\\', '/', $exDir_02); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_02', $exDir_02, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_02', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_03') != '') {
-			$exDir_03 = Params::getParam('exDir_03');
-			$exDir_03 = trim($exDir_03); // trim space
-			$exDir_03 = str_replace('\\', '/', $exDir_03); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_03', $exDir_03, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_03', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_04') != '') {
-			$exDir_04 = Params::getParam('exDir_04');
-			$exDir_04 = trim($exDir_04); // trim space
-			$exDir_04 = str_replace('\\', '/', $exDir_04); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_04', $exDir_04, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_04', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_05') != '') {
-			$exDir_05 = Params::getParam('exDir_05');
-			$exDir_05 = trim($exDir_05); // trim space
-			$exDir_05 = str_replace('\\', '/', $exDir_05); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_05', $exDir_05, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_05', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_06') != '') {
-			$exDir_06 = Params::getParam('exDir_06');
-			$exDir_06 = trim($exDir_06); // trim space
-			$exDir_06 = str_replace('\\', '/', $exDir_06); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_06', $exDir_06, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_06', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_07') != '') {
-			$exDir_07 = Params::getParam('exDir_07');
-			$exDir_07 = trim($exDir_07); // trim space
-			$exDir_07 = str_replace('\\', '/', $exDir_07); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_07', $exDir_07, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_07', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_08') != '') {
-			$exDir_08 = Params::getParam('exDir_08');
-			$exDir_08 = trim($exDir_08); // trim space
-			$exDir_08 = str_replace('\\', '/', $exDir_08); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_08', $exDir_08, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_08', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_09') != '') {
-			$exDir_09 = Params::getParam('exDir_09');
-			$exDir_09 = trim($exDir_09); // trim space
-			$exDir_09 = str_replace('\\', '/', $exDir_09); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_09', $exDir_09, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_09', '', 'advanced-file-monitor', 'STRING');
-		}
-		if(Params::getParam('exDir_10') != '') {
-			$exDir_10 = Params::getParam('exDir_10');
-			$exDir_10 = trim($exDir_10); // trim space
-			$exDir_10 = str_replace('\\', '/', $exDir_10); // unify slash on Linux and Windows
-			osc_set_preference('afm_exDir_10', $exDir_10, 'advanced-file-monitor', 'STRING');
-		} else {
-			osc_set_preference('afm_exDir_10', '', 'advanced-file-monitor', 'STRING');
+			osc_set_preference('afm_directories', '', 'advanced-file-monitor', 'STRING');
 		}
 
 		osc_add_flash_ok_message(__('Settings Saved', 'advanced_file_monitor'), 'admin');
@@ -215,23 +156,11 @@
 		<br/><br/>
 		<strong>IMPORTANT</strong>
 		<br/>
-		Fill-in below input fields in ordered fashion (01, 02, 03...) and insert <strong>relative</strong> directory paths
-		<br/>
-		Do not enter multiple values separated with comma or leave blank fields in between!
+		Insert <strong>relative</strong> directory or file paths ONE PER LINE
 		</span>
 		<br/><br/>
 
-		<input type="text" name="exDir_01" id="exDir_01" placeholder="01." value="<?php echo osc_get_preference('afm_exDir_01', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_02" id="exDir_02" placeholder="02." value="<?php echo osc_get_preference('afm_exDir_02', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_03" id="exDir_03" placeholder="03." value="<?php echo osc_get_preference('afm_exDir_03', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_04" id="exDir_04" placeholder="04." value="<?php echo osc_get_preference('afm_exDir_04', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_05" id="exDir_05" placeholder="05." value="<?php echo osc_get_preference('afm_exDir_05', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_06" id="exDir_06" placeholder="06." value="<?php echo osc_get_preference('afm_exDir_06', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_07" id="exDir_07" placeholder="07." value="<?php echo osc_get_preference('afm_exDir_07', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_08" id="exDir_08" placeholder="08." value="<?php echo osc_get_preference('afm_exDir_08', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_09" id="exDir_09" placeholder="09." value="<?php echo osc_get_preference('afm_exDir_09', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-		<input type="text" name="exDir_10" id="exDir_10" placeholder="10." value="<?php echo osc_get_preference('afm_exDir_10', 'advanced-file-monitor'); ?>" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;" /><br/>
-
+		<textarea rows="10" name="afm_directories" id="afm_directories" placeholder="" style="margin:3px 0; padding:8px 1%; width:98%; box-shadow:inset 0 1px 1px #008BFF; -moz-box-shadow:inset 0 1px 1px #008BFF; -webkit-box-shadow:inset 0 1px 1px #008BFF;"><?php echo osc_get_preference('afm_directories', 'advanced-file-monitor'); ?></textarea><br/>
 		<br/><hr style="border-style:ridge;" /><br/>
 
 		<!-- Extensions -->
