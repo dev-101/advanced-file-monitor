@@ -1,3 +1,9 @@
+4.6
+performance improvements
+cleanup of unused files/directories
+rename New/Modified/Deleted "Files" => "Keys"
+remove 10-input fields limit (and ugly AND logic) and replace it with textarea with arbitrary number of excluded files/directories
+
 4.5
 clear bug fix
 admin_settings.php | admin re-style
