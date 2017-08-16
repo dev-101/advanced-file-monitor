@@ -1,3 +1,0 @@
-Instead of include -> exclude extensions (due directory support)
-
-If osc_preference field for ext exclusion is empty '' do not apply it! (it will skip all files & dirs in that case)
