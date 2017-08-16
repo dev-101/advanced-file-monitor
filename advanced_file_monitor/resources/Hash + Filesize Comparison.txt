@@ -1,1 +1,0 @@
-To minimize collision probability effect even further, compare both hash & filesize values
