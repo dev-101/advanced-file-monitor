@@ -5,10 +5,13 @@
 		$diffB = afm_get_diffs();
 
 		$dao_preference = new Preference();
-		$dao_preference->update(array("s_value" => ''), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_files")) ;
-		$dao_preference->update(array("s_value" => ''), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_diffs")) ;
+		$dao_preference->update(array("s_value" => ''), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_files"));
+		$dao_preference->update(array("s_value" => ''), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_diffs"));
 		unset($dao_preference);
 		osc_reset_preferences();
+
+		// re-scan
+		afm_scan();
 
 		header('Location: ' . osc_admin_base_url(true) . '?page=plugins&action=renderplugin&route=afm-settings');
 	}
@@ -62,7 +65,7 @@
 
 <!-- Modified Files -->
 <?php if(!empty($diffs['alt'])) { ?>
-	<h2 id="mod"><?php _e('Modified Files', 'advanced_file_monitor'); ?></h2>
+	<h2 id="mod"><?php _e('Modified Keys', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
 		<thead>
 			<tr>
@@ -91,7 +94,7 @@
 
 <!-- New Files -->
 <?php if(!empty($diffs['add'])) { ?>
-	<h2 id="new"><?php _e('New Files', 'advanced_file_monitor'); ?></h2>
+	<h2 id="new"><?php _e('New Keys', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
 		<thead>
 			<tr>
@@ -116,7 +119,7 @@
 
 <!-- Deleted Files -->
 <?php if(!empty($diffs['del'])) { ?>
-	<h2 id="del"><?php _e('Deleted Files', 'advanced_file_monitor'); ?></h2>
+	<h2 id="del"><?php _e('Deleted Keys', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
 		<thead>
 			<th><?php _e('N', 'advanced_file_monitor'); ?></th>
