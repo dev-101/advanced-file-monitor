@@ -3,10 +3,10 @@
 	// Manual Scan / View Results routing
 	$ManualScan = Params::getParam('manualscan');
 
-	if($ManualScan === 'yes') {
+	if ($ManualScan === 'yes') {
 		// show flash message & auto-redirect
-		if(afm_scan('yes') > 0) {
-			if(osc_version() >= 320 ) {
+		if (afm_scan('yes') > 0) {
+			if (osc_version() >= 320 ) {
 				// auto-redirect
 				header('Location: ' . osc_route_admin_url('afm-scan'));
 			} else {
@@ -17,7 +17,7 @@
 			// show flash message
 			osc_add_flash_ok_message(__('Manual Scan completed. No changes detected.','advanced_file_monitor'), 'admin');
 			// redirect
-			if(osc_version() >= 320 ) {
+			if (osc_version() >= 320 ) {
 				header('Location: ' . osc_route_admin_url('afm-settings'));
 			} else {
 				header('Location: ' . osc_admin_base_url(true) . '?page=plugins&action=renderplugin&route=afm-settings');
@@ -26,10 +26,10 @@
 	}
 
 	// Save Form Data
-	if( Params::getParam('option') == 'advanced_file_monitor_admin_settings' ) {
+	if ( Params::getParam('option') == 'advanced_file_monitor_admin_settings' ) {
 
 		// Base Scan Bath
-		if(Params::getParam('path') != '') {
+		if (Params::getParam('path') != '') {
 			$path = Params::getParam('path');
 			osc_set_preference('afm_path', $path, 'advanced-file-monitor', 'STRING');
 		} else {
@@ -38,13 +38,13 @@
 		}
 
 		// Cron Job
-		if(Params::getParam('cron') != '') {
+		if (Params::getParam('cron') != '') {
 			$cron = Params::getParam('cron');
 			osc_set_preference('afm_cron', $cron, 'advanced-file-monitor', 'STRING');
 		}
 
 		// Extensions
-		if(Params::getParam('extensions') != '') {
+		if (Params::getParam('extensions') != '') {
 			$extensions = Params::getParam('extensions');
 			$extensions = strtolower($extensions); // convert to lowercase
 			$extensions = str_replace(' ', '', $extensions); // remove white space
@@ -55,7 +55,7 @@
 		}
 
 		// Directories
-		if(Params::getParam('afm_directories') != '') {
+		if (Params::getParam('afm_directories') != '') {
 			$afm_directories = Params::getParam('afm_directories');
 			// trim
 			$afm_directories = trim($afm_directories); // trim space
@@ -79,7 +79,7 @@
 
 		osc_add_flash_ok_message(__('Settings Saved', 'advanced_file_monitor'), 'admin');
 		// redirect
-		if(osc_version() >= 320 ) {
+		if (osc_version() >= 320 ) {
 			header('Location: ' . osc_route_admin_url('afm-settings'));
 		} else {
 			header('Location: ' . osc_admin_base_url(true) . '?page=plugins&action=renderplugin&route=afm-settings');
@@ -107,7 +107,7 @@
 
 	<div style="display:block; float:right; clear:both;">
 		<!-- Manual Scan -->
-		<?php if(osc_version() >= 320 ) { ?>
+		<?php if (osc_version() >= 320 ) { ?>
 			<a id="manual-scan" class="btn btn-submit" href="<?php osc_admin_base_url(true); ?>?page=plugins&action=renderplugin&route=afm-settings&manualscan=yes"><?php _e('MANUAL SCAN','advanced_file_monitor'); ?></a>
 		<?php } else { ?>
 			<a id="manual-scan" class="btn btn-submit" href="<?php osc_admin_base_url(true); ?>?page=plugins&action=renderplugin&file=advanced_file_monitor/admin/admin_settings.php&manualscan=yes"><?php _e('MANUAL SCAN','advanced_file_monitor'); ?></a>
