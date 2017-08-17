@@ -439,7 +439,7 @@ function advanced_ad_management_config() {
 }
 
 #######################################
-# Debug AMF | uncomment hook to debug #
+# Debug AFM | uncomment hook to debug #
 #######################################
 function afm_debug() {
 
