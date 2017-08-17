@@ -14,7 +14,7 @@ The MySQL server has gone away (error 2006) has two main causes and solutions:
 
 * * *
 
-ADF Plugin cannot be installed. PHP debug log does not reveal much, if anything. At best, generic warning about invalid supplied argument in foreach() loop.
+AFM Plugin cannot be installed. PHP debug log does not reveal much, if anything. At best, generic warning about invalid supplied argument in foreach() loop.
 
 MySQL Debug log reveals Error 2006 - MySQL Server Gone Away
 
