@@ -12,7 +12,7 @@ Short Name: AFM
 
 // Install
 function afm_install () {
-	if(version_compare(PHP_VERSION, '5.3.8', '>=')) {
+	if (version_compare(PHP_VERSION, '5.3.8', '>=')) {
 
 		$base_path = osc_base_path();
 		$cron = 'hourly';
@@ -108,7 +108,7 @@ function afm_scan($man = 'no', $scanPath = null) {
 	);
 
 	// invalid protection
-	while($iterator->valid()) {
+	while ($iterator->valid()) {
 
 		// iterator conditions
 		if (!$iterator->isDot() && $iterator->isReadable()) {
@@ -191,7 +191,7 @@ function afm_scan($man = 'no', $scanPath = null) {
 				$diffs["add"] = array_diff_assoc($files, $tmp);
 			}
 
-			if(!empty($diffs)) {
+			if (!empty($diffs)) {
 				$diffs['files'] = $files;
 			}
 
@@ -210,7 +210,7 @@ function afm_scan($man = 'no', $scanPath = null) {
 
 		}
 
-		if($man === 'yes') {
+		if ($man === 'yes') {
 			return count($diffs);
 		}
 
@@ -227,7 +227,7 @@ function afm_email() {
 	$diffs = afm_get_diffs();
 
 	// empty email fail safe
-	if(empty($diffs)) {
+	if (empty($diffs)) {
 		// repeat scan procedure to prevent empty email report being sent
 		afm_scan();
 	// construct email report
@@ -280,7 +280,7 @@ function afm_email() {
 		}
 
 		// new files
-		if(!empty($diffs['add'])) {
+		if (!empty($diffs['add'])) {
 			$body .= '<h2>New Keys</h2>' . PHP_EOL;
 			$body .= '<table border="1">' . PHP_EOL;
 			$body .= '<thead>' . PHP_EOL;
@@ -306,7 +306,7 @@ function afm_email() {
 		}
 
 		// deleted files
-		if(!empty($diffs['del'])) {
+		if (!empty($diffs['del'])) {
 			$body .= '<h2>Deleted Keys</h2>' . PHP_EOL;
 			$body .= '<table border="1">' . PHP_EOL;
 			$body .= '<thead>' . PHP_EOL;
@@ -344,8 +344,8 @@ function afm_email() {
 		// send email reports to all admins
 		$admins = Admin::newInstance()->listAll();
 
-        foreach($admins as $admin) {
-            if( !empty($admin['s_email']) && ($admin['b_moderator'] == 0) ) {
+        foreach ($admins as $admin) {
+            if ( !empty($admin['s_email']) && ($admin['b_moderator'] == 0) ) {
 				// set email params
 				$emailParams   =  array
 				(
@@ -375,8 +375,8 @@ function afm_system_path_mismatch_flash_message() {
 
 	$base_path_check = osc_get_preference('afm_path', 'advanced-file-monitor');
 
-	if($base_path_check != osc_base_path()) {
-		if(osc_version() >= 320 ) {
+	if ($base_path_check != osc_base_path()) {
+		if (osc_version() >= 320 ) {
 			osc_add_flash_error_message('<a href="' . osc_route_admin_url('afm-settings') . '">' . '<img src="' . osc_base_url() . 'oc-content/plugins/advanced_file_monitor/icons/warning-sign.png" style="vertical-align:middle; padding:0 5px;" />' . __('Advanced File Monitor :: System Path has changed! Please review and update <strong>Base Scan Path</strong> field', 'advanced_file_monitor') . '<img src="' . osc_base_url() . 'oc-content/plugins/advanced_file_monitor/icons/new_window.png" style="vertical-align:baseline; padding:0 5px;" />' . '</a>', 'admin');
 		} else {
 			osc_add_flash_error_message('<a href="' . osc_admin_base_url('true') . '?page=plugins&action=renderplugin&file=advanced_file_monitor/admin/admin_settings.php' . '">' . '<img src="' . osc_base_url() . 'oc-content/plugins/advanced_file_monitor/icons/warning-sign.png" vertical-align:middle; padding:0 5px;" />' . __('Advanced File Monitor :: System Path has changed! Please review and update <strong>Base Scan Path</strong> field.', 'advanced_file_monitor') . '<img src="' . osc_base_url() . 'oc-content/plugins/advanced_file_monitor/icons/new_window.png" style="vertical-align:baseline; padding:0 5px;" />' . '</a>', 'admin');
@@ -385,9 +385,9 @@ function afm_system_path_mismatch_flash_message() {
 }
 // check current location
 $route = Params::getParamsAsArray();
-if(isset($route['route'])) {
+if (isset($route['route'])) {
 	// prevent error flash message @ afm-settings page
-	if($route['route'] != 'afm-settings') {
+	if ($route['route'] != 'afm-settings') {
 		// insert warning flash message @ route pages
 		osc_add_hook('init_admin', 'afm_system_path_mismatch_flash_message');
 	}
@@ -401,8 +401,8 @@ function afm_difference_detection_flash_message() {
 
 	$diffs = afm_get_diffs();
 
-	if(!empty($diffs) && Params::getParam('afmAction') == '' && osc_is_admin_user_logged_in() ) {
-		if(osc_version() >= 320 ) {
+	if (!empty($diffs) && Params::getParam('afmAction') == '' && osc_is_admin_user_logged_in() ) {
+		if (osc_version() >= 320 ) {
 			osc_add_flash_error_message('<a href="' . osc_route_admin_url('afm-scan') . '">' . '<img src="' . osc_base_url() . 'oc-content/plugins/advanced_file_monitor/icons/warning-sign.png" style="vertical-align:middle; padding:0 5px;" />' . __('Advanced File Monitor :: Changes Detected', 'advanced_file_monitor') . '<img src="' . osc_base_url() . 'oc-content/plugins/advanced_file_monitor/icons/new_window.png" style="vertical-align:baseline; padding:0 5px;" />' . '</a>', 'admin');
 		} else {
 			osc_add_flash_error_message('<a href="' . osc_admin_base_url('true') . '?page=plugins&action=renderplugin&file=advanced_file_monitor/admin/admin_view_changes.php' . '">' . '<img src="' . osc_base_url() . 'oc-content/plugins/advanced_file_monitor/icons/warning-sign.png" vertical-align:middle; padding:0 5px;" />' . __('Advanced File Monitor :: Changes Detected', 'advanced_file_monitor') . '<img src="' . osc_base_url() . 'oc-content/plugins/advanced_file_monitor/icons/new_window.png" style="vertical-align:baseline; padding:0 5px;" />' . '</a>', 'admin');
@@ -411,7 +411,7 @@ function afm_difference_detection_flash_message() {
 }
 // check current location
 $route = Params::getParamsAsArray();
-if(isset($route['route'])) {
+if (isset($route['route'])) {
 	// prevent error flash message @ afm-scan page
 	if($route['route'] != 'afm-scan') {
 		// insert warning flash message @ route pages
@@ -487,7 +487,7 @@ function afm_debug() {
 	);
 
 	// invalid protection
-	while($iterator->valid()) {
+	while ($iterator->valid()) {
 
 		// iterator conditions
 		if (!$iterator->isDot() && $iterator->isReadable()) {
@@ -580,7 +580,7 @@ function afm_debug() {
 
 /** ROUTES **/
 
-if(osc_version() >= 320 ) {
+if (osc_version() >= 320 ) {
 	osc_add_route('afm-settings', 'afm-settings/', 'afm-settings/', osc_plugin_folder(__FILE__).'admin/admin_settings.php');
 	osc_add_route('afm-scan', 'afm-scan/', 'afm-scan/', osc_plugin_folder(__FILE__).'admin/admin_view_changes.php');
 }
@@ -597,13 +597,13 @@ osc_add_hook(osc_plugin_path(__FILE__) . '_uninstall', 'afm_uninstall');
 osc_add_hook(__FILE__ . '_configure', 'advanced_ad_management_config');
 
 // Admin Menu
-if(osc_version() >= 300) {
+if (osc_version() >= 300) {
 	osc_add_hook('init_admin', 'afm_admin_menu');
 }
 
 // Cron Hook
 $cron = osc_get_preference('afm_cron', 'advanced-file-monitor');
-if($cron != 'MANUAL') {
+if ($cron != 'MANUAL') {
 	osc_add_hook('cron_' . $cron, 'afm_cron_function');
 }
 ?>
