@@ -1,7 +1,7 @@
 <?php if ( ( !defined('OC_ADMIN') || OC_ADMIN!==true ) ) exit('Access is not allowed.'); ?>
 
 <?php
-	if(Params::getParam('afmAction') === 'clear') {
+	if (Params::getParam('afmAction') === 'clear') {
 		$diffB = afm_get_diffs();
 
 		$dao_preference = new Preference();
@@ -64,7 +64,7 @@
 <br><br>
 
 <!-- Modified Files -->
-<?php if(!empty($diffs['alt'])) { ?>
+<?php if (!empty($diffs['alt'])) { ?>
 	<h2 id="mod"><?php _e('Modified Keys', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
 		<thead>
@@ -77,7 +77,7 @@
 		</thead>
 
 		<tbody>
-		<?php foreach($diffs['alt'] as $key => $v) { ?>
+		<?php foreach ($diffs['alt'] as $key => $v) { ?>
 			<?php $i = 1; ?>
 			<?php foreach($v as $key1 => $v1) { ?>
 				<tr <?php if($key == 'new') { echo 'style="color:#F00;"'; } // set red color for new key row ?>>
@@ -93,7 +93,7 @@
 <?php } ?>
 
 <!-- New Files -->
-<?php if(!empty($diffs['add'])) { ?>
+<?php if (!empty($diffs['add'])) { ?>
 	<h2 id="new"><?php _e('New Keys', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
 		<thead>
@@ -106,7 +106,7 @@
 
 		<tbody>
 		<?php $i = 1; ?>
-		<?php foreach($diffs['add'] as $add => $addV) {	?>
+		<?php foreach ($diffs['add'] as $add => $addV) {	?>
 			<tr>
 				<td><?php echo $i; ?></td>
 				<td style="color:#00F;"><?php echo $add; ?></td>
@@ -118,7 +118,7 @@
 <?php } ?>
 
 <!-- Deleted Files -->
-<?php if(!empty($diffs['del'])) { ?>
+<?php if (!empty($diffs['del'])) { ?>
 	<h2 id="del"><?php _e('Deleted Keys', 'advanced_file_monitor'); ?></h2>
 	<table class="table">
 		<thead>
@@ -129,7 +129,7 @@
 
 		<tbody>
 		<?php $i = 1; ?>
-		<?php foreach($diffs['del'] as $del => $delV) {	?>
+		<?php foreach ($diffs['del'] as $del => $delV) {	?>
 			<tr>
 				<td><?php echo $i; ?></td>
 				<td style="color:#F00;"><?php echo $del; ?></td>
