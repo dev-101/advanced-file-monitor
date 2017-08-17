@@ -166,14 +166,14 @@ function afm_scan($man = 'no', $scanPath = null) {
 
 				// deleted files
 				if (!array_key_exists($key, $files)) {
-					$diffs["del"][$key] = $value;
+					$diffs['del'][$key] = $value;
 					$tmp[$key] = $value;
 				}
 
 				// modified files
 				else {
 					if ($files[$key] != $value) {
-						$diffs["alt"]['old'][$key] = $value;
+						$diffs['alt']['old'][$key] = $value;
 						$diffs['alt']['new'][$key] = $files[$key];
 						$tmp[$key] = $files[$key];
 					}
@@ -188,7 +188,7 @@ function afm_scan($man = 'no', $scanPath = null) {
 
 			// new files
 			if (count($tmp) < count($files)) {
-				$diffs["add"] = array_diff_assoc($files, $tmp);
+				$diffs['add'] = array_diff_assoc($files, $tmp);
 			}
 
 			if (!empty($diffs)) {
@@ -246,7 +246,7 @@ function afm_email() {
 		################################################################
 
 		// altered files
-		if(!empty($diffs['alt'])) {
+		if (!empty($diffs['alt'])) {
 			$body .= '<h2>Modified Keys</h2>' . PHP_EOL;
 			$body .= '<table border="1">' . PHP_EOL;
 			$body .= '<thead>' . PHP_EOL;
@@ -260,12 +260,12 @@ function afm_email() {
 
 			$body .= '<tbody>' . PHP_EOL;
 			$alt_color = ''; // define empty style variable
-			foreach($diffs['alt'] as $key => $v) {
-				if($key === 'new') {
+			foreach ($diffs['alt'] as $key => $v) {
+				if ($key === 'new') {
 					$alt_color = 'style="color:#FF0000;"'; // set style for new key rows
 				}
 				$i = 1;
-				foreach($v as $key1 => $v1) {
+				foreach ($v as $key1 => $v1) {
 			$body .= '<tr ' . $alt_color . '>' . PHP_EOL;
 			$body .= '<td>' . $i . '</td>' . PHP_EOL;
 			$body .= '<td>' . $key1 . '</td>' . PHP_EOL;
@@ -293,7 +293,7 @@ function afm_email() {
 
 			$body .= '<tbody>' . PHP_EOL;
 			$i = 1;
-			foreach($diffs['add'] as $add => $addV) {
+			foreach ($diffs['add'] as $add => $addV) {
 			$body .= '<tr>' . PHP_EOL;
 			$body .= '<td>' . $i . '</td>' . PHP_EOL;
 			$body .= '<td span style="color:#0000FF;">' . $add . '</td>' . PHP_EOL;
@@ -319,7 +319,7 @@ function afm_email() {
 
 			$body .= '<tbody>' . PHP_EOL;
 			$i = 1;
-			foreach($diffs['del'] as $del => $delV) {
+			foreach ($diffs['del'] as $del => $delV) {
 			$body .= '<tr>' . PHP_EOL;
 			$body .= '<td>' . $i . '</td>' . PHP_EOL;
 			$body .= '<td span style="color:#FF0000;">' . $del . '</td>' . PHP_EOL;
@@ -540,7 +540,7 @@ function afm_debug() {
 
 			// deleted files
 			if (!array_key_exists($key, $files)) {
-				$diffs["del"][$key] = $value;
+				$diffs['del'][$key] = $value;
 				$tmp[$key] = $value;
 
 				echo 'deleted files - ' . '$diffs["del"][$key]: ' . $diffs["del"][$key] . '<br/>';
@@ -550,12 +550,12 @@ function afm_debug() {
 			// modified files
 			else {
 				if ($files[$key] != $value) {
-					$diffs["alt"]['old'] = array($key => $value);
+					$diffs['alt']['old'] = array($key => $value);
 					$diffs['alt']['new'] = array($key => $files[$key]);
 					$tmp[$key] = $files[$key];
 
 					echo 'modified files - ' . '$diffs["alt"]["old"]: ';
-					print_r($diffs["alt"]['old']);
+					print_r($diffs['alt']['old']);
 					echo '<br/>';
 
 					echo 'modified files - ' . '$diffs["alt"]["new"]: ';
