@@ -15,6 +15,10 @@ Q: What is Advanced File Monitor plugin?
 
 A: File System Integrity Scanner, in one sentence. Plugin will scan your files, create a "snapshot" of their signatures (not the full backup! - but, there's a nice idea :-) ), and store them for later. When the next execution cycle via CRON kicks in, it will perform another scan and do a cross-comparison with the original results from before. Needless to say, this may pose additional stress to your server, so I strongly suggest that you avoid using it on cheap hosting plans, bad hosting with low reputation, lowend VPS boxes etc. It will mostly work, but not without limits and potential problems.
 
+Q: How To Upgrade?
+
+A: Uninstall old plugin first in Admin Dashboard. Remove all files via FTP (or Admin Dashboard). Upload new files via FTP. Install new version. Done!
+
 Q: I cannot install it! I receive "plugin installed" flash message, but it is still in red color and not installed! What the?
 
 A: Enable Osclass MySQL debugging and see what error you get. If it is "Error 2006", your MySQL server connection has timed-out and the plugin could not save the initial scan results during the installation procedure. You must either try to tweak MySQL server to allow longer connection time, or upgrade to a more powerful server. Another 'hack' exists to limit scan directories directly inside plugin's index.php file around line ~40, and try again.
