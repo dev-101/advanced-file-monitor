@@ -2,13 +2,9 @@
 
 <?php
 	if (Params::getParam('afmAction') === 'clear') {
-		$diffB = afm_get_diffs();
-
-		$dao_preference = new Preference();
-		$dao_preference->update(array("s_value" => ''), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_files"));
-		$dao_preference->update(array("s_value" => ''), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_diffs"));
-		unset($dao_preference);
-		osc_reset_preferences();
+		// reset reference snapshot & differences
+		osc_set_preference('afm_files', '', 'advanced-file-monitor', 'STRING');
+		osc_set_preference('afm_diffs', '', 'advanced-file-monitor', 'STRING');
 
 		// re-scan
 		afm_scan();
