@@ -3,7 +3,7 @@
 Plugin Name: Advanced File Monitor
 Plugin URI: 
 Description: Alerts Admins whenever system files modifications are detected
-Version: 4.6 mod
+Version: 4.7 mod
 Author: JChapman & dev101
 Author URI: 
 Update URI: 
@@ -58,12 +58,12 @@ function afm_escape_regex_pattern($string) {
 
 // Get Reference
 function afm_get_files() {
-	return(unserialize(osc_get_preference('afm_files', 'advanced-file-monitor')));
+	return (unserialize(osc_get_preference('afm_files', 'advanced-file-monitor')));
 }
 
 // Get Difference
 function afm_get_diffs() {
-	return(unserialize(osc_get_preference('afm_diffs', 'advanced-file-monitor')));
+	return (unserialize(osc_get_preference('afm_diffs', 'advanced-file-monitor')));
 }
 
 // Scan Files
@@ -144,10 +144,8 @@ function afm_scan($man = 'no', $scanPath = null) {
 
 	// check first time scan
 	if (afm_get_files() == '' || afm_get_files() == null) {
-		$dao_preference = new Preference();
-		$dao_preference->update(array("s_value" => serialize($files) ), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_files"));
-		unset($dao_preference);
-		osc_reset_preferences();
+		// set reference snapshot
+		osc_set_preference('afm_files', serialize($files), 'advanced-file-monitor', 'STRING');
 	}
 
 	$diffs = '';
@@ -198,10 +196,7 @@ function afm_scan($man = 'no', $scanPath = null) {
 			unset($tmp);
 
 			// store differences
-			$dao_preference = new Preference();
-			$dao_preference->update(array("s_value" => serialize($diffs)), array("s_section" =>"advanced-file-monitor", "s_name" => "afm_diffs"));
-			unset($dao_preference);
-			osc_reset_preferences();
+			osc_set_preference('afm_diffs', serialize($diffs), 'advanced-file-monitor', 'STRING');
 
 			// send email notification
 			if(!empty($diffs)) {
