@@ -152,24 +152,4 @@
 		print_r($diffs);
 		echo '</pre>';
 */
-
-/*
-	// get difference
-	$diffs = afm_get_diffs();
-
-		// array debug
-		echo '<pre>';
-		print_r($diffs['alt']);
-		echo '</pre>';
-*/
-
-/*
-	// get files
-	$files = afm_get_files();
-
-		// array debug
-		echo '<pre>';
-		print_r($files);
-		echo '</pre>';
-*/
 ?>
