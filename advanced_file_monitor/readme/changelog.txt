@@ -1,3 +1,7 @@
+4.7
+cleanup of unused/duplicate debug functions
+replace dao preference class with osc_set_preference() helpers (deleted keys @ database improvement | note: use in-plugin CLEAR function to re-create default preference keys)
+
 4.6
 performance improvements
 cleanup of unused files/directories
